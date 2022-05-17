@@ -236,13 +236,13 @@ const FormProblemMachine = () => {
 
 
     return (
-        <Container className={classes.container}>
+        <Container className={classes.container} maxWidth="xl">
             {!user && (
                 <Navigate to="/login" replace={true} />
             )}
-            {((!user.roles.includes("ROLE_SUPERVISOR"))) ? (
+            {/* {((!user.roles.includes("ROLE_SUPERVISOR"))) ? (
                 <Typography>Not Allowed</Typography>
-            ) : (
+            ) : ( */}
                 <React.Fragment>
                     <div className={classes.titleContainer}>
                         <Link to={"/problem-machine"}>
@@ -412,7 +412,7 @@ const FormProblemMachine = () => {
                     </Card>
 
                 </React.Fragment>
-            )}
+            {/* )} */}
             <Snackbar open={openAlert} autoHideDuration={4000} onClose={handleClose} anchorOrigin={{ vertical: "bottom", horizontal: "left" }}>
                 <Alert onClose={handleClose} severity={severity}>
                     {snackbarMsg}

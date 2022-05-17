@@ -127,7 +127,7 @@ const LeftbarSupervisor = () => {
                 <div className={classes.nested}>
                     <Link to="/equipment" className={classes.link}>
                         <Opacity className={classes.icon} />
-                        <Typography className={classes.text} >Equipment</Typography>
+                        <Typography className={classes.text} >Measuring Equipment</Typography>
                     </Link>
                 </div>
 

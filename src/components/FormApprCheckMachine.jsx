@@ -160,6 +160,7 @@ const FormApprCheckMachine = () => {
                                         {
                                             parts_id: 0,
                                             status: true,
+                                            comment_Value: "",
                                         },
                                     ],
                                     problems: [
@@ -295,6 +296,7 @@ const FormApprCheckMachine = () => {
                                                                 <TableCell>Standard</TableCell>
                                                                 <TableCell>Method</TableCell>
                                                                 <TableCell>Status</TableCell>
+                                                                <TableCell>Comment</TableCell>
                                                             </TableRow>
                                                         </TableHead>
                                                         <TableBody>
@@ -308,7 +310,15 @@ const FormApprCheckMachine = () => {
                                                                             <TableCell>{value.parts_name}</TableCell>
                                                                             <TableCell>{value.parts_standard}</TableCell>
                                                                             <TableCell>{value.parts_method}</TableCell>
-                                                                            <TableCell>{value.status ? "OK" : "NG"}</TableCell>
+                                                                            <TableCell>{value.status ? "OK" : (
+                                                                                <>
+                                                                                    <select onChange={() => alert(`${machineCheckId} - ${value.parts_id}`)}>
+                                                                                        <option value="1">OK</option>
+                                                                                        <option value="0" selected>NG</option>
+                                                                                    </select>
+                                                                                </>
+                                                                            )}</TableCell>
+                                                                            <TableCell>{value.comment_value}</TableCell>
                                                                         </TableRow>
                                                                     );
                                                                 })}
