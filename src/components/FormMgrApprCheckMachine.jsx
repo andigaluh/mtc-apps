@@ -183,6 +183,7 @@ const FormMgrApprCheckMachine = () => {
                                         {
                                             parts_id: 0,
                                             status: true,
+                                            comment_value: "",
                                         },
                                     ],
                                     problems: [
@@ -315,6 +316,7 @@ const FormMgrApprCheckMachine = () => {
                                                             <TableCell>Standard</TableCell>
                                                             <TableCell>Method</TableCell>
                                                             <TableCell>Status</TableCell>
+                                                            <TableCell>Comment</TableCell>
                                                         </TableRow>
                                                     </TableHead>
                                                     <TableBody>
@@ -329,6 +331,7 @@ const FormMgrApprCheckMachine = () => {
                                                                         <TableCell>{value.parts_standard}</TableCell>
                                                                         <TableCell>{value.parts_method}</TableCell>
                                                                         <TableCell>{value.status ? "OK" : "NG"}</TableCell>
+                                                                        <TableCell>{value.comment_value}</TableCell>
                                                                     </TableRow>
                                                                 );
                                                             })}

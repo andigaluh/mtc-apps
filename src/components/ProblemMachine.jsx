@@ -240,14 +240,14 @@ const ProblemMachine = () => {
     }
 
     return (
-        <Container className={classes.container}>
+        <Container className={classes.container} maxWidth="xl">
             <ToolsContext.Provider value={value}>
                 {!user && (
                     <Navigate to="/login" replace={true} />
                 )}
-                {((!user.roles.includes("ROLE_SUPERVISOR"))) ? (
+                {/* {((!user.roles.includes("ROLE_SUPERVISOR"))) ? (
                     <Typography>Not Allowed</Typography>
-                ) : (
+                ) : ( */}
                     <React.Fragment>
                         <Typography variant="h4" className={classes.title}>Problem Machine</Typography>
                         <Card>
@@ -283,7 +283,7 @@ const ProblemMachine = () => {
                             </Alert>
                         </Snackbar>
                     </React.Fragment>
-                )}
+                {/* )} */}
                 <Link to={"/problem-machine/form"}>
                     <Tooltip title="Add" aria-label="add" >
                         <Fab color="primary" className={classes.fab}>

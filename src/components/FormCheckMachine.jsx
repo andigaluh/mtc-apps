@@ -139,9 +139,29 @@ const FormCheckMachine = () => {
         setStatusParts(array);
     };
 
+    const handleCommentChange = (event) => {
+        const { value, id } = event.target;
+        const array = Object.values(statusParts);
+
+        let objIndex = array.findIndex((obj) => obj.parts_id == id);
+
+        if (objIndex < 0) {
+            array.push({ parts_id: id, status: value });
+        } else {
+            array[objIndex].comment_value = value;
+        }
+
+        setStatusParts(array);
+    }
+
     const resetRadioCheck = () => {
         var ele = document.getElementsByClassName("radio-check");
         for (var i = 0; i < ele.length; i++) ele[i].checked = false;
+    }
+
+    const resetCommentValue = () => {
+        var ele = document.getElementsByClassName("form-control");
+        for (var i = 0; i < ele.length; i++) ele[i].value = "";
     }
 
     useEffect(() => {
@@ -151,7 +171,7 @@ const FormCheckMachine = () => {
     }, [machineId, machineCode]);
 
     return (
-        <Container className={classes.container}>
+        <Container className={classes.container} maxWidth="xl">
             {!user && (
                 <Navigate to="/login" replace={true} />
             )}
@@ -187,6 +207,7 @@ const FormCheckMachine = () => {
                                             {
                                                 parts_id: 0,
                                                 status: true,
+                                                comment_value: "",
                                             },
                                         ],
                                         problems: [
@@ -243,7 +264,7 @@ const FormCheckMachine = () => {
                                                     problems: problemsArr,
                                                     need_parts: needPartsArr,
                                                 };
-                                                //console.log(JSON.stringify(data,null,2));
+                                                console.log(JSON.stringify(data,null,2));
                                                 machine_checkService.create(data)
                                                     .then(
                                                         (response) => {
@@ -266,10 +287,11 @@ const FormCheckMachine = () => {
                                                     )
                                                     .catch((error) => {
                                                         console.log(error);
-                                                    }); 
+                                                    });
                                                 setSubmitting(false);
                                                 resetForm();
                                                 resetRadioCheck();
+                                                resetCommentValue();
                                                 setStatusParts([]);
                                             } else {
                                                 
@@ -373,6 +395,7 @@ const FormCheckMachine = () => {
                                                                 <TableCell>Standard</TableCell>
                                                                 <TableCell>Method</TableCell>
                                                                 <TableCell>Status</TableCell>
+                                                                <TableCell>Comment</TableCell>
                                                             </TableRow>
                                                         </TableHead>
                                                         <TableBody>
@@ -409,6 +432,16 @@ const FormCheckMachine = () => {
                                                                             />{" "}
                                                                             NG
                                                                         </div>
+                                                                    </TableCell>
+                                                                    <TableCell>
+                                                                        
+                                                                            <input
+                                                                                type="text"
+                                                                                id={`${value.id}`}
+                                                                                name={`status_parts.${index}.comment_value`}
+                                                                                className="form-control"
+                                                                                onChange={handleCommentChange}
+                                                                            />
                                                                     </TableCell>
                                                                 </TableRow>
                                                                 );
