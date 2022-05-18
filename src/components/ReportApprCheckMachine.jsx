@@ -118,6 +118,8 @@ const ReportApprCheckMachine = () => {
             name: "Status",
             sortable: true,
             cell: (row) => {
+                const status_update_parts = row.status_update_parts;
+                const label_status_update_parts = (status_update_parts) ? "!OK" : "OK";
                 return (
                     <React.Fragment>
                         {!row.status ? (
@@ -129,7 +131,7 @@ const ReportApprCheckMachine = () => {
                             />
                         ) : (
                             <Chip
-                                label="OK"
+                                label={label_status_update_parts}
                                 color="primary"
                                 deleteIcon={<Done />}
                                 className={classes.statusOK}

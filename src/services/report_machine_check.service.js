@@ -36,6 +36,19 @@ const download = () => {
   return api.get(`${API_URL}report-machine-check/download`);
 };
 
+const updatePartsCondition = (machine_check_id, parts_id, data) => {
+  return api.put(
+    `${API_URL}report-machine-check/parts/${machine_check_id}/${parts_id}`,
+    data
+  );
+};
+
+const statusUpdatedParts = (machine_check_id) => {
+  return api.get(
+    `${API_URL}report-machine-check/statusUpdated/${machine_check_id}`
+  );
+};
+
 export default {
   getAll,
   create,
@@ -45,4 +58,6 @@ export default {
   remove,
   updateParts,
   download,
+  updatePartsCondition,
+  statusUpdatedParts,
 };
