@@ -73,6 +73,8 @@ const FormApprCheckMachine = () => {
     const [machineNeedParts, setMachineNeedParts] = useState([]);
     const [approveButton, setApproveButton] = useState(false);
 
+    const [disableButton, setDisableButton] = useState(false);
+
     const handleClose = (event, reason) => {
         if (reason === "clickaway") {
             return;
@@ -116,6 +118,25 @@ const FormApprCheckMachine = () => {
             }
         );
     };
+
+    const handleChangePartsCondition = (machine_check_id, parts_id, data) => {
+        report_machine_checkService.updatePartsCondition(machine_check_id, parts_id, data).then(
+            (response) => {
+                setOpen(true);
+                setSnackbarMsg(response.data.message);
+                
+            }, (error) => {
+                const _content =
+                    (error.response &&
+                        error.response.data &&
+                        error.response.data.message) ||
+                    error.message ||
+                    error.toString();
+                setOpen(true);
+                setSnackbarMsg(_content);
+            }
+        )
+    }
 
 
     useEffect(() => {
@@ -312,7 +333,8 @@ const FormApprCheckMachine = () => {
                                                                             <TableCell>{value.parts_method}</TableCell>
                                                                             <TableCell>{value.status ? "OK" : (
                                                                                 <>
-                                                                                    <select onChange={() => alert(`${machineCheckId} - ${value.parts_id}`)}>
+                                                                                    <select onChange={(e) => handleChangePartsCondition(machineCheckId, value.parts_id, { status: e.target.value})}>
+                                                                                    {/* <select onChange={(e) => alert(`${machineCheckId} - ${value.parts_id} - ${e.target.value}`)}> */}
                                                                                         <option value="1">OK</option>
                                                                                         <option value="0" selected>NG</option>
                                                                                     </select>
@@ -353,7 +375,6 @@ const FormApprCheckMachine = () => {
                                                                                         Problem Action
                                                                                     </Typography>
                                                                                     <textarea
-                                                                                        className="form-control"
                                                                                         type="text"
                                                                                         value={problem.problem_action}
                                                                                         readOnly="true"

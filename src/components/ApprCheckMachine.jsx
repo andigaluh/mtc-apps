@@ -90,6 +90,7 @@ const ApprCheckMachine = () => {
             (response) => {
                 console.log(response.data);
                 setCurrentItem(response.data);
+
             },
             (error) => {
                 const _content =
@@ -117,6 +118,9 @@ const ApprCheckMachine = () => {
             name: "Status",
             sortable: true,
             cell: (row) => {
+                
+                const status_update_parts = row.status_update_parts;
+                const label_status_update_parts = (status_update_parts) ? "!OK" : "OK";
                 return (
                     <React.Fragment>
                         {!row.status ? (
@@ -128,8 +132,8 @@ const ApprCheckMachine = () => {
                             />
                         ) : (
                             <Chip
-                                label="OK"
-                                color="primary"
+                                label={label_status_update_parts}
+                                color={"primary"}
                                 deleteIcon={<Done />}
                                 className={classes.statusOK}
                             />
@@ -274,7 +278,7 @@ const ApprCheckMachine = () => {
     }
 
     return (
-        <Container className={classes.container}>
+        <Container className={classes.container} maxWidth="xl">
                 {!user && (
                     <Navigate to="/login" replace={true} />
                 )}
