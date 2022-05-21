@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { Card, CardContent, Container, Fab, Grid, makeStyles, Typography, Paper, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Button, CardHeader, Snackbar } from "@material-ui/core";
 import { useParams, Navigate, Link } from "react-router-dom";
 import { UserContext } from "../UserContext";
-import { ArrowBack } from "@material-ui/icons";
+import { ArrowBack, PictureAsPdf } from "@material-ui/icons";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import machine_checkService from "../services/machine_check.service";
@@ -10,6 +10,8 @@ import report_machine_checkService from "../services/report_machine_check.servic
 import { dateNow, formatdate } from "../helpers/DateCustom";
 import MuiAlert from '@material-ui/lab/Alert';
 import { MyTextInput, MyTextArea, MyTextHidden } from "../helpers/FormElement";
+import { PDFDownloadLink } from '@react-pdf/renderer'
+import PdfGenerateFile from "./PdfGenerateFile";
 
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -56,6 +58,10 @@ const useStyles = makeStyles((theme) => ({
     },
     link: {
         textDecoration: "none"
+    },
+    buttonDownload: {
+        marginLeft: theme.spacing(2),
+        textDecoration: "none"
     }
 }));
 
@@ -73,6 +79,7 @@ const FormMgrApprCheckMachine = () => {
     const [machineNeedParts, setMachineNeedParts] = useState([]);
     const [machineApproval, setMachineApproval] = useState([]);
     const [approveButton, setApproveButton] = useState(false);
+    const [pdfVersion, setPdfVersion] = useState(false);
 
     const handleClose = (event, reason) => {
         if (reason === "clickaway") {
@@ -104,6 +111,7 @@ const FormMgrApprCheckMachine = () => {
                 setMachineParts(response.data.MachineCheckConditionArr);
                 setMachineProblem(response.data.MachineCheckProblemArr);
                 setMachineNeedParts(response.data.MachineCheckNeedPartsArr);
+                setPdfVersion(true);
             },
             (error) => {
                 const _content =
@@ -476,6 +484,13 @@ const FormMgrApprCheckMachine = () => {
                                                     Back
                                                 </Button>
                                             </Link>
+                                        {pdfVersion && (
+                                            <PDFDownloadLink document={<PdfGenerateFile machine={machine} machineApproval={machineApproval} />} fileName={`machine_check_sheet_${machineCheckId}.pdf`}>
+                                                {({ blob, url, loading, error }) => (loading ? 'Loading document...' : (
+                                                    <Button type="button" variant="contained" color="primary" className={classes.buttonDownload}><PictureAsPdf /></Button>
+                                                ))}
+                                            </PDFDownloadLink>
+                                        )}
                                         </Grid>
                                     </Grid>
                                 </Form>
