@@ -137,6 +137,11 @@ const Spareparts = () => {
             sortable: true,
         },
         {
+            name: "Treatment",
+            selector: (row) => row.treatment,
+            sortable: true,
+        },
+        {
             name: "Indicator Exp",
             selector: (row) => row.expired_date,
             sortable: true,
