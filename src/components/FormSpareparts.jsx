@@ -66,6 +66,7 @@ const FormSpareparts = () => {
         qty: 0,
         expired_date: "",
         status: false,
+        treatment: "",
     });
 
     const handleClose = (event, reason) => {
@@ -252,9 +253,6 @@ const FormSpareparts = () => {
                                                     ) : null}
                                                 </div>
 
-
-                                            </Grid>
-                                            <Grid item xs={12} sm={6}>
                                                 <div className={classes.item}>
                                                     <TextField
                                                         variant="outlined"
@@ -272,6 +270,11 @@ const FormSpareparts = () => {
                                                         <Typography size="small" color="error">{formik.errors.method}</Typography>
                                                     ) : null}
                                                 </div>
+
+
+                                            </Grid>
+                                            <Grid item xs={12} sm={6}>
+                                                
 
                                                 <div className={classes.item}>
                                                     <TextField
@@ -308,6 +311,22 @@ const FormSpareparts = () => {
                                                     />
                                                     {formik.touched.expired_date && formik.errors.expired_date ? (
                                                         <Typography size="small" color="error">{formik.errors.expired_date}</Typography>
+                                                    ) : null}
+                                                </div>
+
+                                                <div className={classes.item}>
+                                                    <TextField
+                                                        variant="outlined"
+                                                        margin="normal"
+                                                        fullWidth
+                                                        id="treatment"
+                                                        label="Spareparts treatment"
+                                                        autoComplete="treatment"
+
+                                                        {...formik.getFieldProps('treatment')}
+                                                    />
+                                                    {formik.touched.treatment && formik.errors.treatment ? (
+                                                        <Typography size="small" color="error">{formik.errors.treatment}</Typography>
                                                     ) : null}
                                                 </div>
 
