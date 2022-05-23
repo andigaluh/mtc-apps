@@ -40,6 +40,10 @@ const getTotalMinutesProblem = () => {
   return api.get(`dashboard/total_minutes_problem`);
 };
 
+const getSummaryShift = () => {
+  return api.get(`report-machine-check/check_machine_summary`);
+};
+
 export default {
   getAllStatusMachine,
   getLatestStatusMachineNG,
@@ -51,4 +55,5 @@ export default {
   getTotalProblemMachine,
   getTotalProblemMachineInMonth,
   getTotalMinutesProblem,
+  getSummaryShift,
 };

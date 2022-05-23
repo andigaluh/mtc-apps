@@ -7,6 +7,7 @@ import CardMachineNG from './CardMachineNG';
 import CardSparepartsQtyAlert from "./CardSparepartsQtyAlert";
 import CardToolsQtyAlert from "./CardToolsQtyAlert";
 import ChartMinutesProblem from "./ChartMinutesProblem";
+import CardSummaryShift from "./CardSummaryShift";
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -18,9 +19,13 @@ const Home = () => {
     const classes = useStyles();
     
     return (
-        <Container className={classes.container} maxWidth="lg">
+        <Container className={classes.container} maxWidth="xl">
             <Typography variant="h4" className={classes.title}>Dashboard</Typography>
             <Grid container spacing={2}>
+                <Grid item xs={12}>
+                    <CardSummaryShift/>
+                </Grid>
+
                 <Grid item xs={12}>
                     <ChartMinutesProblem />
                 </Grid>
