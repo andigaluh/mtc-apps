@@ -85,6 +85,7 @@ const ProblemMachine = () => {
         problem_machineService.getAll(params).then(
             (response) => {
                 setCurrentItem(response.data)
+                console.log(response.data)
             },
             (error) => {
                 const _content =
@@ -153,6 +154,7 @@ const ProblemMachine = () => {
             selector: (row) => row.parts,
             sortable: true,
         },
+        
         {
             name: "Problem",
             selector: (row) => row.problem,
@@ -167,6 +169,24 @@ const ProblemMachine = () => {
             name: "PIC",
             selector: (row) => row.user,
             sortable: true,
+        },
+        {
+            name: "Parts Exp",
+            selector: (row) => row.parts_expired,
+            sortable: true,
+            cell: (row) => {
+                let expired_date = row.parts_expired;
+                if (row.parts_id == 9999) {
+                    expired_date = "-"
+                }
+                return (
+                    <React.Fragment>
+                        <Typography variant="body2">
+                            {expired_date}
+                        </Typography>
+                    </React.Fragment>
+                )
+            }
         },
         {
             name: "Start Problem (WIB)",

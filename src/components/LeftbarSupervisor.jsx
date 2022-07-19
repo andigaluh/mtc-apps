@@ -113,7 +113,7 @@ const LeftbarSupervisor = () => {
                 <div className={classes.nested}>
                     <Link to="/tools" className={classes.link}>
                         <Colorize className={classes.icon} />
-                        <Typography className={classes.text} >Tools</Typography>
+                        <Typography className={classes.text} >Tools and Equipment</Typography>
                     </Link>
                 </div>
 

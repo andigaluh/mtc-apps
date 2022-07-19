@@ -11,7 +11,8 @@ import machineService from "../services/machine.service";
 import machine_checkService from "../services/machine_check.service";
 import { dateNow, timeNow } from "../helpers/DateCustom";
 import MuiAlert from '@material-ui/lab/Alert';
-import { MyTextInput, MySelect, MyTextArea, MyCustomSelect } from "../helpers/FormElement"
+import { MyTextInput, MySelect, MyTextArea, MyCustomSelect } from "../helpers/FormElement";
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -60,6 +61,8 @@ const FormCheckMachine = () => {
     const [statusParts, setStatusParts] = useState([]);
     const [currentParts, setCurrentParts] = useState([]);
     const [severity, setSeverity] = useState("success");
+    const [valueShift, setValueShift] = useState(1);
+    const [disableButton, setDisableButton] = useState(false);
 
     const handleClose = (event, reason) => {
         if (reason === "clickaway") {
@@ -69,6 +72,11 @@ const FormCheckMachine = () => {
     };
 
     const retrieveShift = () => {
+        /* const dateNow = new Date();
+        var seconds = dateNow.getSeconds();
+        var minutes = dateNow.getMinutes();
+        var hour = dateNow.getHours();
+        console.log(`${hour}:${minutes}:${seconds}`) */
         shiftService.getAll().then(
             (response) => {
                 setCurrentShift(response.data);
@@ -85,6 +93,63 @@ const FormCheckMachine = () => {
             }
         );
     };
+
+    const checkShift1 = () => {
+        var dt = new Date();
+        const timeStartShift1 = process.env.REACT_APP_SHIFT1_START;
+        const timeEndShift1 = process.env.REACT_APP_SHIFT1_END;
+        
+        var s = timeStartShift1.split(':');
+        var dt1 = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate(),
+            parseInt(s[0]), parseInt(s[1]), parseInt(s[2]));
+
+        var e = timeEndShift1.split(':');
+        var dt2 = new Date(dt.getFullYear(), dt.getMonth(),
+            dt.getDate(), parseInt(e[0]), parseInt(e[1]), parseInt(e[2]));
+
+        if (dt >= dt1 && dt <= dt2) {
+            setValueShift(1)
+            console.log('Current time is between Shift1')
+        }
+    }
+
+    const checkShift2 = () => {
+        var dt = new Date();
+        const timeStartShift = process.env.REACT_APP_SHIFT2_START;
+        const timeEndShift = process.env.REACT_APP_SHIFT2_END;
+
+        var s = timeStartShift.split(':');
+        var dt1 = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate(),
+            parseInt(s[0]), parseInt(s[1]), parseInt(s[2]));
+
+        var e = timeEndShift.split(':');
+        var dt2 = new Date(dt.getFullYear(), dt.getMonth(),
+            dt.getDate(), parseInt(e[0]), parseInt(e[1]), parseInt(e[2]));
+
+        if (dt >= dt1 && dt <= dt2) {
+            setValueShift(2)
+            console.log('Current time is between Shift2')
+        }
+    }
+
+    const checkShift3 = () => {
+        var dt = new Date();
+        const timeStartShift = process.env.REACT_APP_SHIFT3_START;
+        const timeEndShift = process.env.REACT_APP_SHIFT3_END;
+
+        var s = timeStartShift.split(':');
+        var dt1 = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate(),
+            parseInt(s[0]), parseInt(s[1]), parseInt(s[2]));
+
+        var e = timeEndShift.split(':');
+        var dt2 = new Date(dt.getFullYear(), dt.getMonth(),
+            dt.getDate(), parseInt(e[0]), parseInt(e[1]), parseInt(e[2]));
+
+        if (dt >= dt1 && dt <= dt2) {
+            setValueShift(3)
+            console.log('Current time is between Shift3')
+        }
+    }
 
     const retrieveParts = () => {
         partsService.getAll().then(
@@ -168,6 +233,9 @@ const FormCheckMachine = () => {
         retrieveShift();
         retrieveParts();
         retrieveMachine(machineId);
+        checkShift1();
+        checkShift2();
+        checkShift3();
     }, [machineId, machineCode]);
 
     return (
@@ -200,7 +268,7 @@ const FormCheckMachine = () => {
                                         inspection_id: user.id,
                                         inspection_name: user.name,
                                         supervisor_id: (user.superior_id[0]) ? user.superior_id[0].id : 0,
-                                        shift_id: 1,
+                                        shift_id: valueShift,
                                         machine_id: currentMachine.id,
                                         machine_name: currentMachine.name,
                                         status_parts: [
@@ -230,7 +298,9 @@ const FormCheckMachine = () => {
                                         time: Yup.string().required("Required"),
                                     })}
                                     onSubmit={(values, { setSubmitting, resetForm }) => {
+                                        setDisableButton(true);
                                         setTimeout(() => {
+                                            
                                             var statusPartsArr = Object.values(statusParts).map(
                                                 function (key) {
                                                     return key;
@@ -272,6 +342,9 @@ const FormCheckMachine = () => {
                                                             setOpen(true);
                                                             setSnackbarMsg(response.data.message);
                                                             resetForm();
+                                                            resetRadioCheck();
+                                                            resetCommentValue();
+                                                            setStatusParts([]);
                                                         },
                                                         (error) => {
                                                             const _content =
@@ -288,11 +361,11 @@ const FormCheckMachine = () => {
                                                     .catch((error) => {
                                                         console.log(error);
                                                     });
-                                                setSubmitting(false);
+                                                /* setSubmitting(false);
                                                 resetForm();
                                                 resetRadioCheck();
                                                 resetCommentValue();
-                                                setStatusParts([]);
+                                                setStatusParts([]); */
                                             } else {
                                                 
                                                 setSeverity("error");
@@ -300,10 +373,12 @@ const FormCheckMachine = () => {
                                                 setSnackbarMsg("Please check all Spareparts condition");
                                                 setSubmitting(true);
                                             }
-                                        }, 400);
+                                            
+                                        }, 2000);
+                                        setDisableButton(false);
                                     }}
                                 >
-                                    {({ values, touched, errors }) => (
+                                    {({ values, touched, errors, setFieldValue }) => (
                                         <Form className={classes.form} autoComplete="off" novalidate="novalidate">
                                             <input
                                                 id="machine_id"
@@ -347,6 +422,7 @@ const FormCheckMachine = () => {
                                                         <MySelect
                                                             label="Shift"
                                                             name="shift_id"
+                                                            //value={valueShift}
                                                         >
                                                             <option value="">
                                                                 Select a Shift
@@ -354,7 +430,7 @@ const FormCheckMachine = () => {
                                                             {currentShift &&
                                                                 currentShift.map((v) => (
                                                                     <option value={v.id}>
-                                                                        {v.name}
+                                                                        {v.name} 
                                                                     </option>
                                                                 ))}
                                                         </MySelect>
@@ -528,7 +604,31 @@ const FormCheckMachine = () => {
                                                                                 <>
                                                                                 <Grid item sm={6}>
                                                                                     <div className={classes.item}>
-                                                                                            <MySelect
+                                                                                        <Typography variant="body1">Spareparts</Typography>
+                                                                                        <Autocomplete
+                                                                                            id={`need_parts.${index}.parts_id`}
+                                                                                            fullWidth
+                                                                                            options={currentParts}
+                                                                                            getOptionLabel={(option) => option.name}
+                                                                                            /* inputValue={inputValue}
+                                                                                            onInputChange={async (event, newInputValue) => {
+                                                                                                setInputValue(newInputValue);
+                                                                                            }} */
+                                                                                            onChange={(event, newInputValue) => {
+                                                                                                const machineId = newInputValue ? newInputValue.id : 0;
+                                                                                                setFieldValue(`need_parts.${index}.parts_id`, machineId);
+                                                                                                
+                                                                                            }}
+                                                                                            renderInput={(params) => (
+                                                                                                <TextField
+                                                                                                    {...params}
+                                                                                                    label="Spareparts"
+                                                                                                    //value={formik.values?.machine_id}
+                                                                                                />
+                                                                                            )}
+
+                                                                                        />
+                                                                                            {/* <MySelect
                                                                                                 label="Spareparts"
                                                                                                 name={`need_parts.${index}.parts_id`}
                                                                                             >
@@ -541,7 +641,7 @@ const FormCheckMachine = () => {
                                                                                                             {v.name}
                                                                                                         </option>
                                                                                                     ))}
-                                                                                            </MySelect>
+                                                                                            </MySelect> */}
                                                                                     </div>
                                                                                 </Grid>
                                                                                 <Grid item sm={5}>
@@ -592,10 +692,10 @@ const FormCheckMachine = () => {
                                                 )}
                                             </FieldArray>
                                             <Grid item sm={12} className={classes.buttonContainer}>
-                                                    <Button type="submit" variant="contained" color="primary" className={classes.buttonSubmit}>
+                                                    <Button type="submit" variant="contained" color="primary" className={classes.buttonSubmit} disabled={disableButton}>
                                                         Submit
                                                     </Button>
-                                                    <Button type="reset" variant="contained" color="secondary" className={classes.buttonClear}>
+                                                    <Button type="reset" variant="contained" color="secondary" className={classes.buttonClear} disabled={disableButton}>
                                                         Clear
                                                     </Button>
                                             </Grid>

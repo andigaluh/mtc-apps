@@ -117,7 +117,7 @@ const CheckMachine = () => {
                             </Grid>
                         ))} 
                     </Grid>
-                </div>
+                </div> 
                 </React.Fragment>
             )}
         </Container>

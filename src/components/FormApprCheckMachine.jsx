@@ -74,6 +74,7 @@ const FormApprCheckMachine = () => {
     const [approveButton, setApproveButton] = useState(false);
 
     const [disableButton, setDisableButton] = useState(false);
+    const [disableActionOptions, setDisableActionOptions] = useState(false);
 
     const handleClose = (event, reason) => {
         if (reason === "clickaway") {
@@ -120,11 +121,12 @@ const FormApprCheckMachine = () => {
     };
 
     const handleChangePartsCondition = (machine_check_id, parts_id, data) => {
+        setDisableActionOptions(true)
         report_machine_checkService.updatePartsCondition(machine_check_id, parts_id, data).then(
             (response) => {
                 setOpen(true);
                 setSnackbarMsg(response.data.message);
-                
+                setDisableActionOptions(false)
             }, (error) => {
                 const _content =
                     (error.response &&
@@ -134,6 +136,7 @@ const FormApprCheckMachine = () => {
                     error.toString();
                 setOpen(true);
                 setSnackbarMsg(_content);
+                setDisableActionOptions(false)
             }
         )
     }
@@ -237,7 +240,7 @@ const FormApprCheckMachine = () => {
                                             .catch((error) => {
                                                 console.log(error);
                                             });
-                                    }, 400);
+                                    }, 2000);
                                 }}
                             >
                                 
@@ -333,7 +336,7 @@ const FormApprCheckMachine = () => {
                                                                             <TableCell>{value.parts_method}</TableCell>
                                                                             <TableCell>{value.status ? "OK" : (
                                                                                 <>
-                                                                                    <select onChange={(e) => handleChangePartsCondition(machineCheckId, value.parts_id, { status: e.target.value})}>
+                                                                                    <select onChange={(e) => handleChangePartsCondition(machineCheckId, value.parts_id, { status: e.target.value})} disabled={disableActionOptions}>
                                                                                     {/* <select onChange={(e) => alert(`${machineCheckId} - ${value.parts_id} - ${e.target.value}`)}> */}
                                                                                         <option value="1">OK</option>
                                                                                         <option value="0" selected>NG</option>
@@ -440,7 +443,7 @@ const FormApprCheckMachine = () => {
                                                     Approve
                                                 </Button>
                                                 <Link to={"/appr-check-machine"} className={classes.link}>
-                                                    <Button type="button" variant="contained" color="secondary" className={classes.buttonClear}>
+                                                    <Button type="button" variant="contained" color="secondary" className={classes.buttonClear} >
                                                         Back
                                                     </Button>
                                                 </Link>

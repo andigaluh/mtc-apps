@@ -1,57 +1,41 @@
-import { Grid, makeStyles, Paper, Typography } from "@material-ui/core";
-import dashboardService from "../services/dashboard.service";
-import React, { useState, useEffect } from "react";
+import { Box, Typography } from '@material-ui/core'
+import React, { useState, useEffect } from 'react';
 import {
     Chart as ChartJS,
     ArcElement,
     Tooltip,
     Legend,
-    CategoryScale,
-    LinearScale,
-    BarElement,
-    Title, 
 } from 'chart.js';
-import { Bar } from 'react-chartjs-2';
+import { Doughnut } from 'react-chartjs-2';
+import dashboardService from "../services/dashboard.service";
+import { useTheme } from '@material-ui/core/styles';
 
-ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title,);
+ChartJS.register(ArcElement, Tooltip, Legend);
 
-
-const useStyles = makeStyles((theme) => ({
-    container: {
-        paddingTop: theme.spacing(10)
-    }
-}));
-
-
-const ChartProblemInMonth = () => {
-    const classes = useStyles();
+function DashboardChartMachineTroubleInMonth() {
+    const theme = useTheme();
+    const [totalProblem, setTotalProblem] = useState([]);
     const [totalProblemBar, setTotalProblemBar] = useState([]);
     const [countMachineBar, setCountMachineBar] = useState(0);
     const [labelMachineBar, setLabelMachineBar] = useState([]);
     const [countProblemBar, setCountProblemBar] = useState([]);
+    const [refreshInterval, setRefreshInterval] = useState(10000);
 
-    const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
-    const d = new Date();
-    let monthName = month[d.getMonth()];
-    let thisYear = d.getFullYear();
-
-    const retrieveTotalProblemInMonth = () => {
-        dashboardService.getTotalProblemMachineInMonth().then(
+    const retrieveTotalProblem = () => {
+        dashboardService.getDownTimeProblemMachineThisMonth().then(
             (response) => {
                 var data = response.data;
                 //console.log(response.data);
                 var arrayName = [];
                 var arrayCount = [];
-                data.map((item) => {
+                data.filter((p) => p.total_minutes_problem != null).map((item) => {
                     arrayName.push(item.name);
-                    arrayCount.push(item.countProblem);
+                    arrayCount.push(item.total_minutes_problem);
                 })
                 setLabelMachineBar(arrayName);
                 setCountProblemBar(arrayCount);
                 setCountMachineBar(response.data.length)
-                //console.log(arrayName)
-                //console.log(arrayCount)
+
                 setTotalProblemBar(response.data);
             },
             (error) => {
@@ -68,8 +52,11 @@ const ChartProblemInMonth = () => {
     };
 
     useEffect(() => {
-        retrieveTotalProblemInMonth();
-    }, []);
+        if (refreshInterval && refreshInterval > 0) {
+            const interval = setInterval(() => retrieveTotalProblem(), refreshInterval);
+            return () => clearInterval(interval)
+        }
+    }, [refreshInterval]);
 
     const random_rgba = () => {
         var o = Math.round, r = Math.random, s = 255;
@@ -84,35 +71,39 @@ const ChartProblemInMonth = () => {
         random_rgba_array.push(random_rgba());
     }
 
-    const options = {
-        responsive: true,
-        plugins: {
-            legend: {
-                position: 'top'
-            },
-
-        },
-    };
-
-    const dataBar = {
+    const data = {
         labels: labelMachineBar,
         datasets: [
             {
-                label: 'count',
+                label: '# of Problem',
                 data: countProblemBar,
                 backgroundColor: random_rgba_array,
+                borderWidth: 1,
             },
         ],
     };
+    const options = {
+        plugins : {
+            legend: {
+                display: false
+            },
+            title: {
+                display: true,
+                text: 'Machine Downtime (this month)',
+            },
+        },
+        maintainAspectRatio: true,
+        aspectRatio: 1.5
+    }
 
-    return (
-        <>
-            <Typography variant="h6">Problem Machine in {monthName}{" "}{thisYear}</Typography>
-            <Paper>
-                <Bar options={options} data={dataBar} />
-            </Paper>
-        </>
-    );
-};
+  return (
+      <Box style={{ textAlign: "center"}}>
+          {/* <Typography variant="h5">Machine Downtime (this month)</Typography> */}
+          <Box>
+              <Doughnut data={data} options={options}/>
+          </Box>
+      </Box>
+  )
+}
 
-export default ChartProblemInMonth;
+export default DashboardChartMachineTroubleInMonth

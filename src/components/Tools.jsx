@@ -176,7 +176,7 @@ const Tools = () => {
                     <Typography>Not Allowed</Typography>
                 ) : (
                     <React.Fragment>
-                        <Typography variant="h4" className={classes.title}>Tools</Typography>
+                        <Typography variant="h4" className={classes.title}>Tools and Equipment</Typography>
                         <Card>
                             <CardContent>
                                 <Typography variant="h6" className={classes.table}>

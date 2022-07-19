@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme) => ({
 const CardSummaryShift = () => {
     const classes = useStyles();
     const [partsAlert, setPartsAlert] = useState([]);
+    const [refreshInterval, setRefreshInterval] = useState(10000);
 
     const columnsParts = [
         {
@@ -27,12 +28,12 @@ const CardSummaryShift = () => {
             sortable: true,
         },
         {
-            name: "code",
+            name: "Code",
             selector: (row) => row.code,
             sortable: true,
         },
         {
-            name: "name",
+            name: "Name",
             selector: (row) => row.name,
             sortable: true,
         },
@@ -110,15 +111,17 @@ const CardSummaryShift = () => {
     };
 
     useEffect(() => {
-        retrievePartsAlert();
-    }, []);
+        if (refreshInterval && refreshInterval > 0) {
+            const interval = setInterval(() => retrievePartsAlert(), refreshInterval);
+            return () => clearInterval(interval)
+        }
+    }, [refreshInterval]);
 
     return (
         <>
-            <Typography variant="h6" className={classes.titleTable}>Check Machine Summary</Typography>
-            <Paper>
-
-                <Typography variant="h6" className={classes.table}>
+            <Typography variant="body2" className={classes.titleTable}>Check Machine Summary</Typography>
+            <Paper style={{ height: "293px", overflowY: "scroll"}}>
+                <Typography variant="body2" className={classes.table}>
                     <DataTable
                         columns={columnsParts}
                         data={partsAlert}

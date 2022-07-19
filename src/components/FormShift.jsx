@@ -159,7 +159,7 @@ const FormShift = () => {
 
 
     return (
-        <Container className={classes.container}>
+        <Container className={classes.container} maxWidth="xl">
             {!user && (
                 <Navigate to="/login" replace={true} />
             )}

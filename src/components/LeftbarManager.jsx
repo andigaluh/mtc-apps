@@ -120,7 +120,7 @@ const LeftbarManager = () => {
                     <div className={classes.subnested}>
                         <Link to="/report/tools" className={classes.link}>
                             <Colorize className={classes.icon} />
-                            <Typography className={classes.text} >Tools</Typography>
+                            <Typography className={classes.text} >Tools and Equipment</Typography>
                         </Link>
                     </div>
 

@@ -124,10 +124,21 @@ const FormMachineParts = () => {
                 return key;
             });
 
-            var data = {
-                machine_id: id,
-                parts_id: partsArr,
-            };
+            console.log(partsArr.length)
+
+            //if (partsArr.length > 0) {
+                var data = {
+                    machine_id: id,
+                    parts_id: partsArr,
+                };
+            //} else {
+            //    var data = {
+            //        machine_id: id
+            //    };
+           // }
+            
+
+            //alert(JSON.stringify(data,null,2))
 
             machineService.updateParts(id, data)
                 .then(
@@ -152,7 +163,7 @@ const FormMachineParts = () => {
                 .catch((error) => {
                     setDisableButton(false);
                     console.log(error);
-                });
+                }); 
         }, 400);
     };
 

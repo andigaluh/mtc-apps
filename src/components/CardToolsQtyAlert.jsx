@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme) => ({
 const CardToolsQtyAlert = () => {
     const classes = useStyles();
     const[toolsAlert, setToolsAlert] = useState([]);
+    const [refreshInterval, setRefreshInterval] = useState(10000);
 
     const retrieveToolsAlert = () => {
         dashboardService.getAlertTools().then(
@@ -39,17 +40,20 @@ const CardToolsQtyAlert = () => {
     };
 
     useEffect(() => {
-        retrieveToolsAlert();
-    }, []);
+        if (refreshInterval && refreshInterval > 0) {
+            const interval = setInterval(() => retrieveToolsAlert(), refreshInterval);
+            return () => clearInterval(interval)
+        }
+    }, [refreshInterval]);
 
     const columnsTools = [
         {
-            name: "name",
+            name: "Name",
             selector: (row) => row.name,
             sortable: true,
         },
         {
-            name: "qty",
+            name: "Qty",
             selector: (row) => row.qty,
             sortable: true,
         },
@@ -57,9 +61,9 @@ const CardToolsQtyAlert = () => {
 
     return (
         <>
-            <Typography variant="h6" className={classes.titleTable}>Tools Quantity Alert</Typography>
+            <Typography variant="body2" className={classes.titleTable}>Tools Quantity Alert</Typography>
             <Paper>
-                <Typography variant="h6" className={classes.table}>
+                <Typography variant="body2" className={classes.table}>
                     <DataTable
                         columns={columnsTools}
                         data={toolsAlert}

@@ -44,6 +44,22 @@ const getSummaryShift = () => {
   return api.get(`report-machine-check/check_machine_summary`);
 };
 
+const getMachineTroubleTrending = () => {
+  return api.get(`dashboard/problem_machine_trending`);
+};
+
+const getDownTimeProblemMachineThisMonth = () => {
+  return api.get(`dashboard/downtime_problem_machine_this_month`);
+};
+
+const getTopFiveMachineProblem = () => {
+  return api.get(`dashboard/top_five_machine_problem`);
+};
+
+const getTotalMachineCheckStatus = () => {
+  return api.get(`dashboard/total_machine_check_status`);
+};
+
 export default {
   getAllStatusMachine,
   getLatestStatusMachineNG,
@@ -56,4 +72,8 @@ export default {
   getTotalProblemMachineInMonth,
   getTotalMinutesProblem,
   getSummaryShift,
+  getMachineTroubleTrending,
+  getDownTimeProblemMachineThisMonth,
+  getTopFiveMachineProblem,
+  getTotalMachineCheckStatus,
 };

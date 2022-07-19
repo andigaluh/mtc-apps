@@ -48,7 +48,7 @@ const CardMachineOK = () => {
     const retrieveMachineOK = () => {
         dashboardService.getLatestStatusMachineOK().then(
             (response) => {
-                //console.log(response.data.length)
+                console.log(response.data)
                 if (response.data.length > 0) {
                     const total_check = response.data[0].total_check;
                     const month = response.data[0].month;
@@ -68,6 +68,7 @@ const CardMachineOK = () => {
                         diff,
                         persen
                     };
+                    console.log(resultData)
                     setMachineOK(resultData);
                 } else {
                     setMachineOK({

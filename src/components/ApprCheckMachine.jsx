@@ -7,6 +7,7 @@ import { Delete, Edit, Add as AddIcon, AccountBalanceWallet, Exposure, Done, Clo
 import "react-data-table-component-extensions/dist/index.css";
 import MuiAlert from '@material-ui/lab/Alert';
 import report_machine_checkService from "../services/report_machine_check.service";
+import machine_checkService from "../services/machine_check.service";
 import { formatdate } from "../helpers/DateCustom";
 import TokenService from "../services/token.service";
 import FormSearch from "./FormSearch";
@@ -87,6 +88,7 @@ const ApprCheckMachine = () => {
     const retrieveItem = () => {
         const params = getRequestParams(searchTitle, searchStartDate, searchEndDate);
         report_machine_checkService.getAll(params).then(
+        //machine_checkService.getAll(params).then(
             (response) => {
                 console.log(response.data);
                 setCurrentItem(response.data);
@@ -302,25 +304,7 @@ const ApprCheckMachine = () => {
                                     handleSearch={handleSearch}
                                     urlDownload={process.env.REACT_APP_API + "report-machine-check/download"}
                                 />
-                                {/* <div className={classes.searchContainer}>
-                                    <TextField id="searchMachineName" label="Machine name" defaultValue={searchTitle} onChange={onChangeSearchTitle} InputLabelProps={{
-                                        shrink: true,
-                                    }} className={classes.searchItem} />
-                                    <TextField id="searchStartDate" label="Start date" defaultValue={searchStartDate} onChange={onChangeSearchStartDate} type="date" InputLabelProps={{
-                                        shrink: true,
-                                    }} className={classes.searchItem} />
-                                    <TextField id="searchEndDate" label="End date" defaultValue={searchEndDate} onChange={onChangeSearchEndDate} type="date" InputLabelProps={{
-                                        shrink: true,
-                                    }} className={classes.searchItem} />
-                                    <Button variant="contained" color="primary" onClick={handleSearch} className={classes.searchItem} >
-                                        <Search/>
-                                    </Button>
-                                    <a href={process.env.REACT_APP_API + "report-machine-check/download"} target="_blank" className={classes.link}>
-                                        <Button variant="contained" color="default" >
-                                            <CloudDownload />
-                                        </Button>
-                                    </a>
-                                </div> */}
+                                
                                 <Typography variant="body2" className={classes.table}>
                                     <DataTable
                                         columns={columns}

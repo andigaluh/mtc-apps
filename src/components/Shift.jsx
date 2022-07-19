@@ -137,7 +137,7 @@ const Shift = () => {
     };
 
     return (
-        <Container className={classes.container}>
+        <Container className={classes.container} maxWidth="xl">
             <ToolsContext.Provider value={value}>
                 {!user && (
                     <Navigate to="/login" replace={true} />

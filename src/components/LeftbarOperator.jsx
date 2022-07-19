@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Collapse, makeStyles, Typography } from "@material-ui/core";
-import { AssignmentTurnedIn, Build, Description, ExpandLess, ExpandMore, Report, ReportProblem } from "@material-ui/icons";
+import { AssignmentTurnedIn, Build, Description, ExpandLess, ExpandMore, Report, ReportProblem, Schedule } from "@material-ui/icons";
 import { Link } from "react-router-dom";
 
 
@@ -85,6 +85,13 @@ const LeftbarOperator = () => {
                     <Link to="/problem-machine" className={classes.link}>
                         <ReportProblem className={classes.icon} />
                         <Typography className={classes.text} >Problem Machine</Typography>
+                    </Link>
+                </div>
+
+                <div className={classes.nested}>
+                    <Link to="/schedule-mtc" className={classes.link}>
+                        <Schedule className={classes.icon} />
+                        <Typography className={classes.text} >Schedule Mtc</Typography>
                     </Link>
                 </div>
             </Collapse>

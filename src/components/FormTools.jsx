@@ -191,7 +191,7 @@ const FormTools = () => {
                                 <ArrowBack />
                             </Fab>
                         </Link>
-                        <Typography variant="h4" className={classes.title}>Tools's Form</Typography>
+                        <Typography variant="h4" className={classes.title}>Tools and Equipment Form</Typography>
                     </div>
                     <Card>
                         <CardContent>

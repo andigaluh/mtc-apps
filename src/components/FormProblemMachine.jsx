@@ -12,6 +12,7 @@ import schedule_mtcService from "../services/schedule_mtc.service";
 import machineService from "../services/machine.service";
 import partsService from "../services/parts.service";
 import problem_machineService from "../services/problem_machine.service";
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -88,6 +89,11 @@ const FormProblemMachine = () => {
     const [currentMachine, setCurrentMachine] = useState([]);
     const [currentParts, setCurrentParts] = useState([]);
     const [machineParts, setMachineParts] = useState([]);
+    const [nameMachine, setNameMachine] = useState("");
+    const [nameParts, setNameParts] = useState("");
+
+    const [value, setValue] = useState(currentMachine[0]);
+    const [inputValue, setInputValue] = useState("");
 
     const handleClose = (event, reason) => {
         if (reason === "clickaway") {
@@ -180,11 +186,40 @@ const FormProblemMachine = () => {
         );
     };
 
+    const RetrieveParts = () => {
+        partsService.getAll().then(
+            (response) => {
+                setMachineParts(response.data);
+                console.log(response.data)
+            },
+            (error) => {
+                const _content =
+                    (error.response &&
+                        error.response.data &&
+                        error.response.data.message) ||
+                    error.message ||
+                    error.toString();
+
+                setMachineParts(_content);
+            }
+        );
+    }
+
     useEffect(() => {
         RetrieveMachine();
+        //RetrieveParts();
         if (!isAddMode) {
+            //console.log(ProblemId)
             problem_machineService.get(ProblemId).then(
-                (response) => {
+                async (response) => {
+                    const MachineParts = await machineService.get(response.data.machine_id);
+                    setMachineParts(MachineParts.data.parts);
+                    setNameMachine(MachineParts.data.name)
+                    
+                    const Parts = await partsService.get(response.data.parts_id);
+                    setNameParts(Parts.data.name)
+                    console.log(Parts.data.name)
+
                     const responseData = {
                         id: response.data.id,
                         problem: response.data.problem,
@@ -197,6 +232,8 @@ const FormProblemMachine = () => {
                         user_id: response.data.user_id,
                     };
                     setCurrentDoc(responseData);
+                    //console.log(responseData)
+                    
                 },
                 (error) => {
                     const _content =
@@ -210,9 +247,13 @@ const FormProblemMachine = () => {
                     console.log(_content);
                 }
             );
+
+            
         }
 
     }, [isAddMode, ProblemId]);
+
+    
 
     const handleChangeMachine = (e) => {
         e.preventDefault();
@@ -267,6 +308,9 @@ const FormProblemMachine = () => {
                                     user_id: Yup.number().required("Required"),
                                 })}
                                 onSubmit={(values, { setSubmitting, resetForm }) => {
+                                    /* setTimeout(() => {
+                                        alert(JSON.stringify(values, null, 2))
+                                    }, 1000); */
                                     if (isAddMode) {
                                         createItem(values, setSubmitting, resetForm);
                                     } else {
@@ -279,20 +323,64 @@ const FormProblemMachine = () => {
                                         <Grid container spacing={2}>
                                             <Grid item xs={12}>
                                                 <div className={classes.item}>
-                                                    <TextField select label="Machine" {...formik.getFieldProps('machine_id')} fullWidth onClick={handleChangeMachine}>
+                                                {!isAddMode && (
+                                                    <Typography variant="body1">Current Machine : {nameMachine}</Typography>
+                                                )}
+                                                <Autocomplete
+                                                    id="machine_id"
+                                                    fullWidth
+                                                    options={currentMachine}
+                                                    getOptionLabel={(option) => option.name}
+                                                    /* inputValue={inputValue}
+                                                    onInputChange={async (event, newInputValue) => {
+                                                        setInputValue(newInputValue);
+                                                    }} */
+                                                    onChange={(event, newInputValue) => {
+                                                        const machineId = newInputValue ? newInputValue.id : 0;
+                                                        formik.setFieldValue("machine_id", machineId);
+                                                        machineService.get(machineId).then(
+                                                            (response) => {
+                                                                setMachineParts(response.data.parts);
+                                                            },
+                                                            (error) => {
+                                                                const _content =
+                                                                    (error.response &&
+                                                                        error.response.data &&
+                                                                        error.response.data.message) ||
+                                                                    error.message ||
+                                                                    error.toString();
+
+                                                                setMachineParts(_content);
+                                                            }
+                                                        );
+                                                    }}
+                                                    renderInput={(params) => (
+                                                        <TextField
+                                                            {...params}
+                                                            label="Machine"
+                                                            value={formik.values?.machine_id}
+                                                        />
+                                                    )}
+                                                    
+                                                />
+                                                {/* <TextField select searchable label="Machine" {...formik.getFieldProps('machine_id')} fullWidth onClick={handleChangeMachine}>
                                                         {currentMachine &&
                                                             currentMachine.map((v) => (
-                                                                <MenuItem value={v.id}>{v.name}</MenuItem>
+                                                                <MenuItem value={v.id} key={v.id}>{v.name}</MenuItem>
                                                             ))}
-                                                    </TextField>
+                                                    </TextField> */}
                                                 </div>
                                             </Grid>
                                             <Grid item xs={12}>
                                                 <div className={classes.item}>
+                                                {!isAddMode && (
+                                                    <Typography variant="body1">Current Parts : {nameParts}</Typography>
+                                                )}
                                                     <TextField select label="Parts" {...formik.getFieldProps('parts_id')} fullWidth>
+                                                        <MenuItem value="9999">No Sparepart</MenuItem>
                                                         {machineParts &&
                                                             machineParts.map((v) => (
-                                                                <MenuItem value={v.id}>{v.name}</MenuItem>
+                                                                <MenuItem value={v.id} key={v.id}>{v.name}</MenuItem>
                                                             ))}
                                                     </TextField>
                                                 </div>

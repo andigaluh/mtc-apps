@@ -1,4 +1,4 @@
-import { Container, makeStyles, Snackbar, Typography, IconButton, Card, CardContent, Tooltip, Fab, Chip, Modal, Button } from "@material-ui/core";
+import { Container, makeStyles, Snackbar, Typography, IconButton, Card, CardContent, Tooltip, Fab, Chip, Modal, Button, Paper, Grid } from "@material-ui/core";
 import React, { useContext, useEffect, useState, useMemo } from "react"
 import { UserContext, ToolsContext } from "../UserContext";
 import { Navigate, Link, useNavigate } from "react-router-dom";
@@ -8,8 +8,32 @@ import "react-data-table-component-extensions/dist/index.css";
 import MuiAlert from '@material-ui/lab/Alert';
 import TokenService from "../services/token.service";
 import schedule_mtcService from "../services/schedule_mtc.service";
-import { formatdate } from "../helpers/DateCustom";
+import { formatdate, formatfulldatetime } from "../helpers/DateCustom";
 import FormSearchDate from "./FormSearchDate";
+import { ViewState, EditingState, IntegratedEditing } from '@devexpress/dx-react-scheduler';
+import {
+    Scheduler,
+    MonthView,
+    DayView,
+    Toolbar,
+    DateNavigator,
+    Appointments,
+    TodayButton,
+    AppointmentTooltip,
+    AppointmentForm,
+} from '@devexpress/dx-react-scheduler-material-ui';
+
+const currentDate = new Date();
+const schedulerData = [
+    { startDate: '2022-07-04T09:45', endDate: '2022-04-10T11:00', title: 'Meeting', Machine: "Machine A", Description: "Description A" },
+    { startDate: '2022-07-04T12:00', endDate: '2022-04-08T13:30', title: 'Go to a gym', Machine: "Machine B", Description: "Description B" },
+];
+
+const appointments = [
+    { title: 'Mail New Leads for Follow Up', startDate: '2022-07-04', endDate: '2022-07-05', Machine: "Machine A", notes: "Description A" },
+    { title: 'Product Meeting', startDate: '2022-07-08', endDate: '2022-07-10', Machine: "Machine A", notes: "Description A" },
+    { title: 'Send Territory Sales Breakdown', startDate: '2022-07-08', endDate: '2022-07-12', Machine: "Machine A", notes: "Description A" },
+];
 
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -97,11 +121,38 @@ const ScheduleMtc = () => {
     };
 
     const retrieveItem = () => {
+        let resultArray = [];
         const params = getRequestParams(searchStartDate, searchEndDate);
         schedule_mtcService.getAll(params).then(
             (response) => {
                 console.log(response.data);
-                setCurrentItem(response.data)
+                var arrResponse = response.data;
+                arrResponse.map((element, index) => {
+                    const startDateFull = new Date(element.plan_date);
+                    const endDateNumber = startDateFull.setHours(startDateFull.getHours() + 17);
+                    const startDate = formatfulldatetime(element.plan_date);
+                    const endDate = formatfulldatetime(endDateNumber);
+                    //console.log(startDate)
+                    //console.log(endDate)
+                    resultArray.push({
+                        id: element.id,
+                        title: `Machine : ${element.machine}, Spareparts: ${element.spareparts}`,
+                        startDate: startDate,
+                        endDate: endDate,
+                        //notes: `Area: ${element.area} \nActivity: ${element.activity}`
+                        activity: element.activity,
+                        area: element.area,
+                        createdAt: element.createdAt,
+                        machine: element.machine,
+                        photo_date: element.photo_date,
+                        photo_name: element.photo_name,
+                        plan_date: element.plan_date,
+                        spareparts: element.spareparts,
+                        user: element.user,
+                    })
+                })
+                //setCurrentItem(response.data)
+                setCurrentItem(resultArray)
             },
             (error) => {
                 const _content =
@@ -277,29 +328,35 @@ const ScheduleMtc = () => {
             name: "Action",
             cell: (row) => {
                 return (
+                    
                     <React.Fragment>
-                        <Link to={`/schedule-mtc/form/${row.id}`} title="Detail">
-                            <IconButton color="primary" aria-label="Edit">
-                                <Edit size="small" />
-                            </IconButton>
-                        </Link>
-                        <IconButton color="primary" title="Delete" aria-label="Delete" onClick={() => {
-                            const r = window.confirm("Are you sure!");
-                            if (r == true) {
-                                schedule_mtcService.remove(row.id)
-                                    .then((response) => {
-                                        retrieveItem();
-                                        setOpen(true);
-                                        setSnackbarMsg(response.data.message);
-                                        
-                                    })
-                                    .catch((e) => {
-                                        console.log(e);
-                                    });
-                            }
-                        }}>
-                            <Delete />
-                        </IconButton>
+                        {user.roles.includes("ROLE_SUPERVISOR") && (
+                            <>
+                                <Link to={`/schedule-mtc/form/${row.id}`} title="Detail">
+                                    <IconButton color="primary" aria-label="Edit">
+                                        <Edit size="small" />
+                                    </IconButton>
+                                </Link>
+                                <IconButton color="primary" title="Delete" aria-label="Delete" onClick={() => {
+                                    const r = window.confirm("Are you sure!");
+                                    if (r == true) {
+                                        schedule_mtcService.remove(row.id)
+                                            .then((response) => {
+                                                retrieveItem();
+                                                setOpen(true);
+                                                setSnackbarMsg(response.data.message);
+
+                                            })
+                                            .catch((e) => {
+                                                console.log(e);
+                                            });
+                                    }
+                                }}>
+                                    <Delete />
+                                </IconButton>
+                            </>
+                        )}
+                        
                     </React.Fragment>
                 );
             },
@@ -346,6 +403,17 @@ const ScheduleMtc = () => {
         retrieveItem()
     }
 
+    const Content = ( ({ children, appointmentData, ...restProps}) => (
+        <AppointmentTooltip.Content {...restProps} appointmentData={appointmentData}>
+            <Grid container alignItems="center">
+                <Grid item xs={2}>Machine : </Grid>
+                <Grid item xs={10}>
+                    {appointmentData.machine}
+                </Grid>
+            </Grid>
+        </AppointmentTooltip.Content>
+    ));
+
     /* const body = (
         <div style={modalStyle} className={classes.paper}>
             <h2 id="simple-modal-title">Text in a modal</h2>
@@ -355,18 +423,23 @@ const ScheduleMtc = () => {
         </div>
     ); */
 
+    const random_rgba = () => {
+        var o = Math.round, r = Math.random, s = 255;
+        return 'rgba(' + o(r() * s) + ',' + o(r() * s) + ',' + o(r() * s) + ', 0.9)';
+    }
+
     return (
-        <Container className={classes.container}>
+        <Container className={classes.container} maxWidth="xl">
             <ToolsContext.Provider value={value}>
                 {!user && (
                     <Navigate to="/login" replace={true} />
                 )}
-                {((!user.roles.includes("ROLE_SUPERVISOR"))) ? (
+                {/* {((!user.roles.includes("ROLE_SUPERVISOR"))) ? (
                     <Typography>Not Allowed</Typography>
-                ) : (
+                ) : ( */}
                     <React.Fragment>
                         <Typography variant="h4" className={classes.title}>Schedule Maintenance</Typography>
-                        <Card>
+                        {/* <Card>
                             <CardContent>
                                 <FormSearchDate
                                     labelStartDate="plan start date"
@@ -386,7 +459,40 @@ const ScheduleMtc = () => {
                                         />
                                 </Typography>
                             </CardContent>
-                        </Card>
+                        </Card> */}
+                        <Paper>
+                        <Scheduler data={currentItem} onClick={() => alert('click')} >
+                                <ViewState
+                                    defaultCurrentDate={currentDate}
+                                />
+                                <EditingState />
+                                <MonthView />
+                                <Appointments appointmentComponent={({
+                                    children,
+                                    data,
+                                    onClick,
+                                    toggleVisibility,
+                                    onAppointmentMetaChange,
+                                    ...restProps
+                                }) => (
+                                <Appointments.Appointment {...restProps} style={{ backgroundColor: (data.photo_date == null) ? random_rgba() : "green"}}>
+                                        <React.Fragment>
+                                        <Link to={(data.photo_date == null) ? `/schedule-mtc/form/${data.id}` : `/schedule-mtc/view/${data.id}`} title="Detail">
+                                                <Typography variant="body2" style={{ color: "white", fontSize: "12px", paddingLeft: "8px", marginBottom: "8px"}}>
+                                                {(data.photo_date == null) ? `Detail` : `View`}
+                                                </Typography>
+                                            </Link>
+                                        {children}
+                                        </React.Fragment>
+                                    </Appointments.Appointment>
+                                )} />
+                                <Toolbar />
+                                <DateNavigator />
+                                <TodayButton />
+                                
+                            </Scheduler>
+                        </Paper>
+                    
                         <Snackbar
                             anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
                             open={open}
@@ -398,14 +504,17 @@ const ScheduleMtc = () => {
                             </Alert>
                         </Snackbar>
                     </React.Fragment>
+                {/* )} */}
+                {user.roles.includes("ROLE_SUPERVISOR") && (
+                    <Link to={"/schedule-mtc/form"}>
+                        <Tooltip title="Add" aria-label="add" >
+                            <Fab color="primary" className={classes.fab}>
+                                <AddIcon />
+                            </Fab>
+                        </Tooltip>
+                    </Link>
                 )}
-                <Link to={"/schedule-mtc/form"}>
-                    <Tooltip title="Add" aria-label="add" >
-                        <Fab color="primary" className={classes.fab}>
-                            <AddIcon />
-                        </Fab>
-                    </Tooltip>
-                </Link>
+                
             </ToolsContext.Provider>
         </Container>
     );

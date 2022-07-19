@@ -135,7 +135,7 @@ const Machines = () => {
                                         retrieveItem();
                                     })
                                     .catch((e) => {
-                                        console.log(e);
+                                        console.log(e.message);
                                     });
                             }
                         }}>

@@ -1,57 +1,51 @@
-import { Grid, makeStyles, Paper, Typography } from "@material-ui/core";
-import dashboardService from "../services/dashboard.service";
-import React, { useState, useEffect } from "react";
+import { Box, Typography } from '@material-ui/core'
+import React, { useState, useEffect } from 'react';
 import {
     Chart as ChartJS,
-    ArcElement,
-    Tooltip,
-    Legend,
     CategoryScale,
     LinearScale,
-    BarElement,
-    Title, 
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend,
 } from 'chart.js';
-import { Bar } from 'react-chartjs-2';
+import { Line } from 'react-chartjs-2';
+import dashboardService from "../services/dashboard.service";
 
-ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title,);
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend
+);
 
 
-const useStyles = makeStyles((theme) => ({
-    container: {
-        paddingTop: theme.spacing(10)
-    }
-}));
-
-
-const ChartProblemInMonth = () => {
-    const classes = useStyles();
+function DashboardChartMachineTroubleTrending() {
     const [totalProblemBar, setTotalProblemBar] = useState([]);
     const [countMachineBar, setCountMachineBar] = useState(0);
     const [labelMachineBar, setLabelMachineBar] = useState([]);
     const [countProblemBar, setCountProblemBar] = useState([]);
-
-    const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
-    const d = new Date();
-    let monthName = month[d.getMonth()];
-    let thisYear = d.getFullYear();
-
+    //const [tahun, setTahun] = useState(new Date().getFullYear);
+    const [refreshInterval, setRefreshInterval] = useState(10000);
+    
     const retrieveTotalProblemInMonth = () => {
-        dashboardService.getTotalProblemMachineInMonth().then(
+        dashboardService.getMachineTroubleTrending().then(
             (response) => {
                 var data = response.data;
                 //console.log(response.data);
                 var arrayName = [];
                 var arrayCount = [];
                 data.map((item) => {
-                    arrayName.push(item.name);
-                    arrayCount.push(item.countProblem);
+                    arrayName.push(`${item.month} ${item.year}`);
+                    arrayCount.push(item.total_problem);
                 })
                 setLabelMachineBar(arrayName);
                 setCountProblemBar(arrayCount);
                 setCountMachineBar(response.data.length)
-                //console.log(arrayName)
-                //console.log(arrayCount)
                 setTotalProblemBar(response.data);
             },
             (error) => {
@@ -67,9 +61,13 @@ const ChartProblemInMonth = () => {
         )
     };
 
+
     useEffect(() => {
-        retrieveTotalProblemInMonth();
-    }, []);
+        if (refreshInterval && refreshInterval > 0) {
+            const interval = setInterval(() => retrieveTotalProblemInMonth(), refreshInterval);
+            return () => clearInterval(interval)
+        }
+    }, [refreshInterval]);
 
     const random_rgba = () => {
         var o = Math.round, r = Math.random, s = 255;
@@ -88,9 +86,12 @@ const ChartProblemInMonth = () => {
         responsive: true,
         plugins: {
             legend: {
-                position: 'top'
+                position: 'top',
             },
-
+            title: {
+                display: true,
+                text: `Machine Trouble Trending`,
+            },
         },
     };
 
@@ -104,15 +105,15 @@ const ChartProblemInMonth = () => {
             },
         ],
     };
-
+    
     return (
-        <>
-            <Typography variant="h6">Problem Machine in {monthName}{" "}{thisYear}</Typography>
-            <Paper>
-                <Bar options={options} data={dataBar} />
-            </Paper>
-        </>
-    );
-};
+    <Box style={{ textAlign: "center"}}>
+        {/* <Typography variant="h5">Machine Trouble Trending</Typography> */}
+        <Box>
+              <Line options={options} data={dataBar} />
+        </Box>
+    </Box>
+  )
+}
 
-export default ChartProblemInMonth;
+export default DashboardChartMachineTroubleTrending

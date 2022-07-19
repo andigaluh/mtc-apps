@@ -240,7 +240,7 @@ const Equipment = () => {
     }
 
     return (
-        <Container className={classes.container}>
+        <Container className={classes.container} maxWidth="xl">
             <SparepartsContext.Provider value={value}>
                 {!user && (
                     <Navigate to="/login" replace={true} />

@@ -19,15 +19,16 @@ const useStyles = makeStyles((theme) => ({
 const CardSparepartsQtyAlert = () => {
     const classes = useStyles();
     const [partsAlert, setPartsAlert] = useState([]);
+    const [refreshInterval, setRefreshInterval] = useState(10000);
 
     const columnsParts = [
         {
-            name: "name",
+            name: "Name",
             selector: (row) => row.name,
             sortable: true,
         },
         {
-            name: "qty",
+            name: "Qty",
             selector: (row) => row.qty,
             sortable: true,
         },
@@ -52,15 +53,18 @@ const CardSparepartsQtyAlert = () => {
     };
 
     useEffect(() => {
-        retrievePartsAlert();
-    }, []);
+        if (refreshInterval && refreshInterval > 0) {
+            const interval = setInterval(() => retrievePartsAlert(), refreshInterval);
+            return () => clearInterval(interval)
+        }
+    }, [refreshInterval]);
 
     return (
         <>
-            <Typography variant="h6" className={classes.titleTable}>Spareparts Quantity Alert</Typography>
+            <Typography variant="body2" className={classes.titleTable}>Spareparts Quantity Alert</Typography>
             <Paper>
 
-                <Typography variant="h6" className={classes.table}>
+                <Typography variant="body2" className={classes.table}>
                     <DataTable
                         columns={columnsParts}
                         data={partsAlert}
