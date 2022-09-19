@@ -86,11 +86,13 @@ const FormApprCheckMachine = () => {
     const retrieveMachine = (machine_check_id) => {
         report_machine_checkService.get(machine_check_id).then(
             (response) => {
+                console.log(response.data)
                 setApproveButton((response.data.supervisor_approval === true) ? true : false);
                 setMachine({
                     id: machine.id,
                     date: formatdate(response.data.date),
                     time: response.data.time,
+                    no_dokumen: response.data.no_dokumen,
                     inspection_date: formatdate(response.data.date),
                     inspection_approval: response.data.inspection_approval,
                     inspection_name: response.data.inspection_name,
@@ -161,7 +163,7 @@ const FormApprCheckMachine = () => {
                                 <ArrowBack />
                             </Fab>
                         </Link>
-                        <Typography variant="h4" className={classes.title}>Approval Check Machine</Typography>
+                        <Typography variant="h4" className={classes.title}>Approval Daily Maintenance Check List</Typography>
                         
                     </div>
                     <Card>
@@ -170,6 +172,7 @@ const FormApprCheckMachine = () => {
                                 enableReinitialize
                                 initialValues={{
                                     id: machine.id,
+                                    no_dokumen: machine.no_dokumen,
                                     date: formatdate(machine.date),
                                     time: machine.time,
                                     inspection_date: formatdate(machine.date),
@@ -289,7 +292,7 @@ const FormApprCheckMachine = () => {
                                                     />
                                                 </div>
                                             </Grid>
-                                            <Grid item sm={6} >
+                                            <Grid item sm={4} >
                                                 <div className={classes.item}>
                                                     <MyTextInput
                                                         label="Date"
@@ -299,13 +302,24 @@ const FormApprCheckMachine = () => {
                                                     />
                                                 </div>
                                             </Grid>
-                                            <Grid item sm={6} >
+                                            <Grid item sm={4} >
                                                 <div className={classes.item}>
                                                     <MyTextInput
                                                         label="Time"
                                                         name="time"
                                                         type="time"
                                                         placeholder="Enter Time"
+                                                    />
+                                                </div>
+                                            </Grid>
+                                            <Grid item sm={4} >
+                                                <div className={classes.item}>
+                                                    <MyTextInput
+                                                        label="No Document"
+                                                        name="no_dokumen"
+                                                        type="text"
+                                                        //placeholder="WMPE-FORM-XXXX"
+                                                        readonly="true"
                                                     />
                                                 </div>
                                             </Grid>

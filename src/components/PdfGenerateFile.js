@@ -103,6 +103,10 @@ function PdfGenerateFile({ machine, machineApproval }) {
                 <Text style={styles.item__label}>Time</Text>
                 <Text style={styles.item__value}>{machine.time}</Text>
               </View>
+              <View style={styles.info__item}>
+                <Text style={styles.item__label}>No Document</Text>
+                <Text style={styles.item__value}>{machine.no_dokumen}</Text>
+              </View>
             </View>
             {itemCheck && (
               <View style={styles.content__item}>

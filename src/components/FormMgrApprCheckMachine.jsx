@@ -94,6 +94,7 @@ const FormMgrApprCheckMachine = () => {
                 //setApproveButton((response.data.supervisor_approval === true) ? true : false);
                 setMachine({
                     id: machine.id,
+                    no_dokumen: response.data.no_dokumen,
                     date: formatdate(response.data.date),
                     time: response.data.time,
                     inspection_date: formatdate(response.data.date),
@@ -177,6 +178,7 @@ const FormMgrApprCheckMachine = () => {
                                 enableReinitialize
                                 initialValues={{
                                     id: machine.id,
+                                    no_dokumen: machine.no_dokumen,
                                     date: formatdate(machine.date),
                                     time: machine.time,
                                     inspection_date: formatdate(machine.date),
@@ -293,7 +295,7 @@ const FormMgrApprCheckMachine = () => {
                                                 />
                                             </div>
                                         </Grid>
-                                        <Grid item sm={6} >
+                                        <Grid item sm={4} >
                                             <div className={classes.item}>
                                                 <MyTextInput
                                                     label="Date"
@@ -303,13 +305,24 @@ const FormMgrApprCheckMachine = () => {
                                                 />
                                             </div>
                                         </Grid>
-                                        <Grid item sm={6} >
+                                        <Grid item sm={4} >
                                             <div className={classes.item}>
                                                 <MyTextInput
                                                     label="Time"
                                                     name="time"
                                                     type="time"
                                                     placeholder="Enter Time"
+                                                />
+                                            </div>
+                                        </Grid>
+                                        <Grid item sm={4} >
+                                            <div className={classes.item}>
+                                                <MyTextInput
+                                                    label="No Document"
+                                                    name="no_dokumen"
+                                                    type="text"
+                                                    //placeholder="Enter Time"
+                                                    readonly="true"
                                                 />
                                             </div>
                                         </Grid>

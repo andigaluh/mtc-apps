@@ -9,7 +9,7 @@ import shiftService from "../services/shift.service";
 import partsService from "../services/parts.service";
 import machineService from "../services/machine.service";
 import machine_checkService from "../services/machine_check.service";
-import { dateNow, timeNow } from "../helpers/DateCustom";
+import { dateNow, timeNow, fullTimeNow } from "../helpers/DateCustom";
 import MuiAlert from '@material-ui/lab/Alert';
 import { MyTextInput, MySelect, MyTextArea, MyCustomSelect } from "../helpers/FormElement";
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -253,7 +253,7 @@ const FormCheckMachine = () => {
                                 <ArrowBack />
                             </Fab>
                         </Link>
-                        <Typography variant="h4" className={classes.title}>Machine's Form</Typography>
+                        <Typography variant="h4" className={classes.title}>Daily Maintenance Check List</Typography>
                     </div>
                     <Card>
                         <CardContent>
@@ -261,6 +261,7 @@ const FormCheckMachine = () => {
                                     enableReinitialize
                                     initialValues={{
                                         id: null,
+                                        no_dokumen: `WMPE-FORM-${fullTimeNow()}${currentMachine.maxIdMachineCheck + 1}`,
                                         date: dateNow(),
                                         time: timeNow(),
                                         inspection_date: dateNow(),
@@ -333,6 +334,7 @@ const FormCheckMachine = () => {
                                                     status_parts: statusPartsArr,
                                                     problems: problemsArr,
                                                     need_parts: needPartsArr,
+                                                    no_dokumen: values.no_dokumen,
                                                 };
                                                 console.log(JSON.stringify(data,null,2));
                                                 machine_checkService.create(data)
@@ -439,7 +441,7 @@ const FormCheckMachine = () => {
                                                         ) : null}
                                                 </div>
                                             </Grid>
-                                            <Grid item sm={6} >
+                                            <Grid item sm={4} >
                                                 <div className={classes.item}>
                                                     
                                                     <MyTextInput
@@ -450,7 +452,7 @@ const FormCheckMachine = () => {
                                                     />
                                                 </div>
                                             </Grid>
-                                            <Grid item sm={6} >
+                                            <Grid item sm={4} >
                                                 <div className={classes.item}>
                                                         <MyTextInput
                                                             label="Time"
@@ -458,6 +460,17 @@ const FormCheckMachine = () => {
                                                             type="time"
                                                             placeholder="Enter Time"
                                                         />
+                                                </div>
+                                            </Grid>
+                                            <Grid item sm={4} >
+                                                <div className={classes.item}>
+                                                    <MyTextInput
+                                                        label="No Document"
+                                                        name="no_dokumen"
+                                                        type="text"
+                                                        placeholder="WMPE-FORM-XXXX"
+                                                        disabled="true"
+                                                    />
                                                 </div>
                                             </Grid>
                                             <Grid item sm={12}>

@@ -30,6 +30,18 @@
     return [hours, minutes].join(":");
     };
 
+    export const fullTimeNow = () => {
+      var today = new Date(),
+        hours = "" + today.getHours(),
+        minutes = "" + today.getMinutes(),
+        seconds = "" + today.getSeconds();
+      if (hours.length < 2) hours = "0" + hours;
+      if (minutes.length < 2) minutes = "0" + minutes;
+      if (seconds.length < 2) seconds = "0" + seconds;
+
+      return [hours, minutes, seconds].join("");
+    };
+
     export const formatTime = (tanggal) => {
     var today = new Date(tanggal),
         hours = "" + today.getHours(),
