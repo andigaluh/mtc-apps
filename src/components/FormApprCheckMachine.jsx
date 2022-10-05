@@ -333,6 +333,7 @@ const FormApprCheckMachine = () => {
                                                                 <TableCell>Spareparts</TableCell>
                                                                 <TableCell>Standard</TableCell>
                                                                 <TableCell>Method</TableCell>
+                                                                <TableCell>Description</TableCell>
                                                                 <TableCell>Status</TableCell>
                                                                 <TableCell>Comment</TableCell>
                                                             </TableRow>
@@ -348,6 +349,7 @@ const FormApprCheckMachine = () => {
                                                                             <TableCell>{value.parts_name}</TableCell>
                                                                             <TableCell>{value.parts_standard}</TableCell>
                                                                             <TableCell>{value.parts_method}</TableCell>
+                                                                            <TableCell>{value.parts_description}</TableCell>
                                                                             <TableCell>{value.status ? "OK" : (
                                                                                 <>
                                                                                     <select onChange={(e) => handleChangePartsCondition(machineCheckId, value.parts_id, { status: e.target.value})} disabled={disableActionOptions}>

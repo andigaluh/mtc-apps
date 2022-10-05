@@ -64,6 +64,8 @@ const FormCheckMachine = () => {
     const [valueShift, setValueShift] = useState(1);
     const [disableButton, setDisableButton] = useState(false);
 
+    console.log(user)
+
     const handleClose = (event, reason) => {
         if (reason === "clickaway") {
             return;
@@ -124,7 +126,7 @@ const FormCheckMachine = () => {
 
         var e = timeEndShift.split(':');
         var dt2 = new Date(dt.getFullYear(), dt.getMonth(),
-            dt.getDate(), parseInt(e[0]), parseInt(e[1]), parseInt(e[2]));
+            dt.getDate() + 1, parseInt(e[0]), parseInt(e[1]), parseInt(e[2]));
 
         if (dt >= dt1 && dt <= dt2) {
             setValueShift(2)
@@ -483,6 +485,7 @@ const FormCheckMachine = () => {
                                                                 <TableCell>Spareparts</TableCell>
                                                                 <TableCell>Standard</TableCell>
                                                                 <TableCell>Method</TableCell>
+                                                                <TableCell>Description</TableCell>
                                                                 <TableCell>Status</TableCell>
                                                                 <TableCell>Comment</TableCell>
                                                             </TableRow>
@@ -498,6 +501,7 @@ const FormCheckMachine = () => {
                                                                     <TableCell>{value.name}</TableCell>
                                                                     <TableCell>{value.standard}</TableCell>
                                                                     <TableCell>{value.method}</TableCell>
+                                                                    <TableCell>{value.description}</TableCell>
                                                                     <TableCell>
                                                                         <div className="form-checkbox">
                                                                             <input

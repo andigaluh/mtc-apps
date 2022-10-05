@@ -77,9 +77,12 @@ function PdfContentItemCheck({ content }) {
                     <Text style={styles.content__text__header}>Method</Text>
                 </View>
                 <View style={styles.content__col40}>
+                    <Text style={styles.content__text__header}>Desc</Text>
+                </View>
+                <View style={styles.content__col40}>
                     <Text style={styles.content__text__header}>Status</Text>
                 </View>
-                <View style={styles.content__col100}>
+                <View style={styles.content__col40}>
                     <Text style={styles.content__text__header}>Comment</Text>
                 </View>
             </View>
@@ -98,9 +101,12 @@ function PdfContentItemCheck({ content }) {
                         <Text style={styles.content__text}>{value.parts_method}</Text>
                     </View>
                     <View style={styles.content__col40}>
+                        <Text style={styles.content__text}>{value.parts_description}</Text>
+                    </View>
+                    <View style={styles.content__col40}>
                         <Text style={styles.content__text__header}>{value.status ? "OK" : "NG"}</Text>
                     </View>
-                    <View style={styles.content__col100}>
+                    <View style={styles.content__col40}>
                         <Text style={styles.content__text}>{value.comment_value}</Text>
                     </View>
                 </View>

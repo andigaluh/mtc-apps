@@ -336,6 +336,7 @@ const FormMgrApprCheckMachine = () => {
                                                             <TableCell>Spareparts</TableCell>
                                                             <TableCell>Standard</TableCell>
                                                             <TableCell>Method</TableCell>
+                                                            <TableCell>Description</TableCell>
                                                             <TableCell>Status</TableCell>
                                                             <TableCell>Comment</TableCell>
                                                         </TableRow>
@@ -351,6 +352,7 @@ const FormMgrApprCheckMachine = () => {
                                                                         <TableCell>{value.parts_name}</TableCell>
                                                                         <TableCell>{value.parts_standard}</TableCell>
                                                                         <TableCell>{value.parts_method}</TableCell>
+                                                                        <TableCell>{value.parts_description}</TableCell>
                                                                         <TableCell>{value.status ? "OK" : "NG"}</TableCell>
                                                                         <TableCell>{value.comment_value}</TableCell>
                                                                     </TableRow>
